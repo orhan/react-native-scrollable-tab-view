@@ -28,7 +28,8 @@ const ScrollableTabView = React.createClass({
     onScroll: PropTypes.func,
     renderTabBar: PropTypes.any,
     style: View.propTypes.style,
-    contentProps: PropTypes.object
+    contentProps: PropTypes.object,
+    animated: PropTypes.bool,
   },
 
   getDefaultProps() {
@@ -38,7 +39,8 @@ const ScrollableTabView = React.createClass({
       page: -1,
       onChangeTab: () => {},
       onScroll: () => {},
-      contentProps: {}
+      contentProps: {},
+      animated: true,
     };
   },
 
@@ -61,9 +63,13 @@ const ScrollableTabView = React.createClass({
 
     if (Platform.OS === 'ios') {
       const offset = pageNumber * this.state.containerWidth;
-      this.scrollView.scrollTo(0, offset);
+      this.scrollView.scrollTo({x: offset, y: 0, animated: this.props.animated});
     } else {
-      this.scrollView.setPage(pageNumber);
+      if (this.props.animated) {
+        this.scrollView.setPage(pageNumber);
+      } else {
+        this.scrollView.setPageWithoutAnimation(pageNumber);
+      }
     }
 
     this.setState({currentPage: pageNumber, });
@@ -125,6 +131,7 @@ const ScrollableTabView = React.createClass({
          initialPage={this.props.initialPage}
          onPageSelected={this._updateSelectedPage}
          keyboardDismissMode="on-drag"
+         scrollEnabled={!this.props.locked}
          onPageScroll={(e) => {
            const { offset, position, } = e.nativeEvent;
            this._updateScrollValue(position + offset);
