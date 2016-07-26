@@ -14,26 +14,40 @@ const DefaultTabBar = React.createClass({
     activeTab: React.PropTypes.number,
     tabs: React.PropTypes.array,
     underlineColor: React.PropTypes.string,
+    underlineHeight: React.PropTypes.number,
     backgroundColor: React.PropTypes.string,
     activeTextColor: React.PropTypes.string,
     inactiveTextColor: React.PropTypes.string,
+    textStyle: Text.propTypes.style,
+    tabStyle: View.propTypes.style,
+  },
+
+  getDefaultProps() {
+    return {
+      activeTextColor: 'navy',
+      inactiveTextColor: 'black',
+      underlineColor: 'navy',
+      backgroundColor: null,
+      underlineHeight: 4,
+    };
   },
 
   renderTabOption(name, page) {
     const isTabActive = this.props.activeTab === page;
-    const activeTextColor = this.props.activeTextColor || 'navy';
-    const inactiveTextColor = this.props.inactiveTextColor || 'black';
-    const textStyle = this.props.textStyle || {};
+    const { activeTextColor, inactiveTextColor, textStyle, } = this.props;
+    const textColor = isTabActive ? activeTextColor : inactiveTextColor;
+    const fontWeight = isTabActive ? 'bold' : 'normal';
 
     return <Button
+      style={{flex: 1}}
       key={name}
       accessible={true}
       accessibilityLabel={name}
       accessibilityTraits='button'
       onPress={() => this.props.goToPage(page)}
     >
-      <View style={styles.tab}>
-        <Text style={[{color: isTabActive ? activeTextColor : inactiveTextColor, fontWeight: isTabActive ? 'bold' : 'normal', }, textStyle]}>
+      <View style={[styles.tab, this.props.tabStyle]}>
+        <Text style={[{color: textColor, fontWeight, }, textStyle, ]}>
           {name}
         </Text>
       </View>
@@ -46,8 +60,8 @@ const DefaultTabBar = React.createClass({
     const tabUnderlineStyle = {
       position: 'absolute',
       width: containerWidth / numberOfTabs,
-      height: 4,
-      backgroundColor: this.props.underlineColor || 'navy',
+      height: this.props.underlineHeight,
+      backgroundColor: this.props.underlineColor,
       bottom: 0,
     };
 
@@ -56,7 +70,7 @@ const DefaultTabBar = React.createClass({
     });
 
     return (
-      <View style={[styles.tabs, {backgroundColor: this.props.backgroundColor || null, }, this.props.style, ]}>
+      <View style={[styles.tabs, {backgroundColor: this.props.backgroundColor, }, this.props.style, ]}>
         {this.props.tabs.map((tab, i) => this.renderTabOption(tab, i))}
         <Animated.View style={[tabUnderlineStyle, { left, }, ]} />
       </View>

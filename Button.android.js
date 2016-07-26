@@ -7,6 +7,7 @@ const {
 
 const Button = (props) => {
   return <TouchableNativeFeedback
+    delayPressIn={0}
     background={TouchableNativeFeedback.SelectableBackground()}
     {...props}
   >
