@@ -52,7 +52,7 @@ const ScrollableTabView = React.createClass({
       contentProps: {},
       scrollWithoutAnimation: false,
       locked: false,
-      prerenderingSiblingsNumber: 1
+      prerenderingSiblingsNumber: 1,
     };
   },
 
@@ -61,7 +61,6 @@ const ScrollableTabView = React.createClass({
       currentPage: this.props.initialPage,
       scrollValue: new Animated.Value(this.props.initialPage),
       containerWidth: Dimensions.get('window').width,
-      containerHeight: Dimensions.get('window').height,
       sceneKeys: this.newSceneKeys({ currentPage: this.props.initialPage, }),
     };
   },
@@ -147,8 +146,6 @@ const ScrollableTabView = React.createClass({
         horizontal
         pagingEnabled
         automaticallyAdjustContentInsets={false}
-        style={styles.scrollableContentIOS}
-        contentContainerStyle={styles.scrollableContentContainerIOS}
         contentOffset={{ x: this.props.initialPage * this.state.containerWidth, }}
         ref={(scrollView) => { this.scrollView = scrollView; }}
         onScroll={(e) => {
@@ -207,9 +204,9 @@ const ScrollableTabView = React.createClass({
       return <SceneComponent
         key={child.key}
         shouldUpdated={this._shouldRenderSceneKey(idx, this.state.currentPage)}
-        style={{width: this.state.containerWidth}}
+        style={{width: this.state.containerWidth, }}
       >
-        {this._keyExists(this.state.sceneKeys, key) ? child : <View style={child.props.style} tabLabel={child.props.tabLabel}/>}
+        {this._keyExists(this.state.sceneKeys, key) ? child : <View tabLabel={child.props.tabLabel}/>}
       </SceneComponent>;
     });
   },
@@ -241,10 +238,10 @@ const ScrollableTabView = React.createClass({
   },
 
   _handleLayout(e) {
-    const { width, height } = e.nativeEvent.layout;
+    const { width, } = e.nativeEvent.layout;
 
     if (width !== this.state.containerWidth) {
-      this.setState({ containerWidth: width, containerHeight: height });
+      this.setState({ containerWidth: width, });
       this.requestAnimationFrame(() => {
         this.goToPage(this.state.currentPage);
       });
@@ -263,7 +260,6 @@ const ScrollableTabView = React.createClass({
       activeTab: this.state.currentPage,
       scrollValue: this.state.scrollValue,
       containerWidth: this.state.containerWidth,
-      containerHeight: this.state.containerHeight,
     };
 
     if (this.props.tabBarUnderlineColor) {
@@ -303,12 +299,6 @@ module.exports = ScrollableTabView;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-  },
-  scrollableContentContainerIOS: {
-    flex: 1,
-  },
-  scrollableContentIOS: {
-    flexDirection: 'column',
   },
   scrollableContentAndroid: {
     flex: 1,
