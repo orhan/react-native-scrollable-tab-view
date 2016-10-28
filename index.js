@@ -134,6 +134,7 @@ const ScrollableTabView = React.createClass({
       pagingEnabled
       automaticallyAdjustContentInsets={false}
       contentOffset={{ x: this.props.initialPage * this.state.containerWidth, }}
+      style={{flex: 1}}
       ref={(scrollView) => { this.scrollView = scrollView; }}
       onScroll={(e) => {
         const offsetX = e.nativeEvent.contentOffset.x;
