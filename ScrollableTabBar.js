@@ -1,5 +1,7 @@
 const React = require('react');
-const ReactNative = require('react-native');
+const { ViewPropTypes } = ReactNative = require('react-native');
+const PropTypes = require('prop-types');
+const createReactClass = require('create-react-class');
 const {
   View,
   Animated,
@@ -13,21 +15,22 @@ const Button = require('./Button');
 
 const WINDOW_WIDTH = Dimensions.get('window').width;
 
-const ScrollableTabBar = React.createClass({
+const ScrollableTabBar = createReactClass({
   propTypes: {
-    goToPage: React.PropTypes.func,
-    activeTab: React.PropTypes.number,
-    tabs: React.PropTypes.array,
-    backgroundColor: React.PropTypes.string,
-    activeTextColor: React.PropTypes.string,
-    inactiveTextColor: React.PropTypes.string,
-    scrollOffset: React.PropTypes.number,
-    style: View.propTypes.style,
-    tabStyle: View.propTypes.style,
-    tabsContainerStyle: View.propTypes.style,
+    goToPage: PropTypes.func,
+    activeTab: PropTypes.number,
+    tabs: PropTypes.array,
+    backgroundColor: PropTypes.string,
+    activeTextColor: PropTypes.string,
+    inactiveTextColor: PropTypes.string,
+    scrollOffset: PropTypes.number,
+    style: ViewPropTypes.style,
+    tabStyle: ViewPropTypes.style,
+    tabsContainerStyle: ViewPropTypes.style,
     textStyle: Text.propTypes.style,
-    renderTab: React.PropTypes.func,
-    underlineStyle: View.propTypes.style,
+    renderTab: PropTypes.func,
+    underlineStyle: ViewPropTypes.style,
+    onScroll: PropTypes.func,
   },
 
   getDefaultProps() {
@@ -127,18 +130,18 @@ const ScrollableTabBar = React.createClass({
     const fontWeight = isTabActive ? 'bold' : 'normal';
 
     return <Button
-      key={`${name}_${page}`}
-      accessible={true}
-      accessibilityLabel={name}
-      accessibilityTraits='button'
-      onPress={() => onPressHandler(page)}
-      onLayout={onLayoutHandler}
-    >
+    key={`${name}_${page}`}
+    accessible={true}
+    accessibilityLabel={name}
+    accessibilityTraits='button'
+    onPress={() => onPressHandler(page)}
+    onLayout={onLayoutHandler}
+      >
       <View style={[styles.tab, this.props.tabStyle, ]}>
-        <Text style={[{color: textColor, fontWeight, }, textStyle, ]}>
-          {name}
-        </Text>
-      </View>
+  <Text style={[{color: textColor, fontWeight, }, textStyle, ]}>
+    {name}
+  </Text>
+    </View>
     </Button>;
   },
 
@@ -162,31 +165,31 @@ const ScrollableTabBar = React.createClass({
     };
 
     return <View
-      style={[styles.container, {backgroundColor: this.props.backgroundColor, }, this.props.style, ]}
-      onLayout={this.onContainerLayout}
-    >
-      <ScrollView
-        ref={(scrollView) => { this._scrollView = scrollView; }}
-        horizontal={true}
-        showsHorizontalScrollIndicator={false}
-        showsVerticalScrollIndicator={false}
-        directionalLockEnabled={true}
-        bounces={false}
-        scrollsToTop={false}
+    style={[styles.container, {backgroundColor: this.props.backgroundColor, }, this.props.style, ]}
+    onLayout={this.onContainerLayout}
+  >
+  <ScrollView
+    ref={(scrollView) => { this._scrollView = scrollView; }}
+    horizontal={true}
+    showsHorizontalScrollIndicator={false}
+    showsVerticalScrollIndicator={false}
+    directionalLockEnabled={true}
+    bounces={false}
+    scrollsToTop={false}
       >
-        <View
-          style={[styles.tabs, {width: this.state._containerWidth, }, this.props.tabsContainerStyle, ]}
-          ref={'tabContainer'}
-          onLayout={this.onTabContainerLayout}
-        >
-          {this.props.tabs.map((name, page) => {
-            const isTabActive = this.props.activeTab === page;
-            const renderTab = this.props.renderTab || this.renderTab;
-            return renderTab(name, page, isTabActive, this.props.goToPage, this.measureTab.bind(this, page));
-          })}
-          <Animated.View style={[tabUnderlineStyle, dynamicTabUnderline, this.props.underlineStyle, ]} />
-        </View>
-      </ScrollView>
+      <View
+    style={[styles.tabs, {width: this.state._containerWidth, }, this.props.tabsContainerStyle, ]}
+    ref={'tabContainer'}
+    onLayout={this.onTabContainerLayout}
+  >
+    {this.props.tabs.map((name, page) => {
+      const isTabActive = this.props.activeTab === page;
+      const renderTab = this.props.renderTab || this.renderTab;
+      return renderTab(name, page, isTabActive, this.props.goToPage, this.measureTab.bind(this, page));
+    })}
+  <Animated.View style={[tabUnderlineStyle, dynamicTabUnderline, this.props.underlineStyle, ]} />
+    </View>
+    </ScrollView>
     </View>;
   },
 

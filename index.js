@@ -9,11 +9,13 @@ const {
   Animated,
   ScrollView,
   StyleSheet,
+  ViewPropTypes,
   InteractionManager,
 } = ReactNative;
 
 import PropTypes from 'prop-types';
 
+const createReactClass = require('create-react-class');
 const TimerMixin = require('react-timer-mixin');
 
 const SceneComponent = require('./SceneComponent');
@@ -21,7 +23,7 @@ const DefaultTabBar = require('./DefaultTabBar');
 const ScrollableTabBar = require('./ScrollableTabBar');
 
 
-const ScrollableTabView = React.createClass({
+const ScrollableTabView = createReactClass({
   mixins: [TimerMixin, ],
   statics: {
     DefaultTabBar,
@@ -35,7 +37,7 @@ const ScrollableTabView = React.createClass({
     onChangeTab: PropTypes.func,
     onScroll: PropTypes.func,
     renderTabBar: PropTypes.any,
-    style: View.propTypes.style,
+    style: ViewPropTypes.style,
     contentProps: PropTypes.object,
     scrollWithoutAnimation: PropTypes.bool,
     locked: PropTypes.bool,
