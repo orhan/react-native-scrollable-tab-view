@@ -1,6 +1,5 @@
 const React = require('react');
 const {
-  PropTypes,
   Component,
 } = React;
 const ReactNative = require('react-native');
@@ -12,6 +11,9 @@ const {
   StyleSheet,
   InteractionManager,
 } = ReactNative;
+
+import PropTypes from 'prop-types';
+
 const TimerMixin = require('react-timer-mixin');
 
 const SceneComponent = require('./SceneComponent');
